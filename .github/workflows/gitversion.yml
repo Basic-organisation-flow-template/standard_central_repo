@@ -14,9 +14,11 @@ jobs:
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.13.2
+        with:
+          versionSpec: 6.0.0
 
-      # - name: Show last commit
-      #   run: git log -1
+      - name: Show last commit
+        run: git log -1
 
       - name: Run GitVersion
         id: gitversion
