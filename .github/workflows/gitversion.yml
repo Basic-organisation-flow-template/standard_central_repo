@@ -32,3 +32,13 @@ jobs:
           echo "Major: ${{ steps.gitversion.outputs.major }}"
           echo "Minor: ${{ steps.gitversion.outputs.minor }}"
           echo "Patch: ${{ steps.gitversion.outputs.patch }}"
+
+      - name: Create and push git tag
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        run: |
+          GIT_AUTHOR_NAME="$(git log -1 --pretty=format:'%an')"
+          GIT_AUTHOR_EMAIL="$(git log -1 --pretty=format:'%ae')"
+          git config user.name "$GIT_AUTHOR_NAME"
+          git config user.email "$GIT_AUTHOR_EMAIL"
+          git tag v${{ steps.gitversion.outputs.fullSemVer }}
+          git push origin v${{ steps.gitversion.outputs.fullSemVer }}
