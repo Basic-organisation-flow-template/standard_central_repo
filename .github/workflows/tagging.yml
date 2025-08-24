@@ -2,10 +2,17 @@ name: Centralized Tagging
 
 on:
   workflow_call:
+    outputs:
+      needs_tag:
+        description: "Whether a tag is needed"
+        value: ${{ jobs.check-tag.outputs.needs_tag }}
   push:
     branches:
       - main
       - QA
+      - dev
+      - feature/**
+
 
 jobs:
   check-tag:
