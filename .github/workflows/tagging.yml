@@ -28,3 +28,6 @@ jobs:
           else
               echo "needs_tag=false" >> $GITHUB_OUTPUT
           fi
+      - name: Debug needs_tag
+        run: echo "needs_tag=${{ steps.check_tag.outputs.needs_tag }}"
+
