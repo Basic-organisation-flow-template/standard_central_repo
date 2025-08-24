@@ -35,8 +35,6 @@ jobs:
 
 # the general default setting of action -> workflow of organisation was modified (use PAT instead)
       - name: Create and push git tag
-      # tagging only happens to main branch
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         run: |
           GIT_AUTHOR_NAME="$(git log -1 --pretty=format:'%an')"
           GIT_AUTHOR_EMAIL="$(git log -1 --pretty=format:'%ae')"
