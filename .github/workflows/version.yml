@@ -1,0 +1,77 @@
+name: GitVersion Semantic Versioning
+
+on:
+  workflow_call:
+    inputs:
+      base_ref:
+        required: true
+        type: string
+      head_ref:
+        required: true
+        type: string
+
+jobs:
+  versioning:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v1
+        with:
+          version: 6.0.0
+
+      - name: Run GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v1
+
+      - name: Decide Version Bump and Tag
+        id: bump_tag
+        run: |
+          BASE="${{ inputs.base_ref }}"
+          HEAD="${{ inputs.head_ref }}"
+          MAJOR="${{ steps.gitversion.outputs.Major }}"
+          MINOR="${{ steps.gitversion.outputs.Minor }}"
+          PATCH="${{ steps.gitversion.outputs.Patch }}"
+          TAG=""
+
+          # Feature -> Dev: bump minor
+          if [[ "$BASE" == "dev" && "$HEAD" == feature* ]]; then
+            NEW_MINOR=$((MINOR+1))
+            TAG="v${MAJOR}.${NEW_MINOR}.0-dev"
+          fi
+
+          # Dev -> Release: bump major
+          if [[ "$BASE" == release* && "$HEAD" == "dev" ]]; then
+            NEW_MAJOR=$((MAJOR+1))
+            TAG="v${NEW_MAJOR}.0.0-rc"
+          fi
+
+          # Release -> Main: bump major
+          if [[ "$BASE" == "main" && "$HEAD" == release* ]]; then
+            NEW_MAJOR=$((MAJOR+1))
+            TAG="v${NEW_MAJOR}.0.0"
+          fi
+
+          # Hotfix -> Main/Release: bump patch
+          if [[ ( "$BASE" == "main" || "$BASE" == release* ) && "$HEAD" == hotfix* ]]; then
+            NEW_PATCH=$((PATCH+1))
+            TAG="v${MAJOR}.${MINOR}.${NEW_PATCH}"
+          fi
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Tag & Push
+        if: steps.bump_tag.outputs.tag != ''
+        run: |
+          GIT_AUTHOR_NAME="$(git log -1 --pretty=format:'%an')"
+          GIT_AUTHOR_EMAIL="$(git log -1 --pretty=format:'%ae')"
+          git config user.name "$GIT_AUTHOR_NAME"
+          git config user.email "$GIT_AUTHOR_EMAIL"
+          git tag ${{ steps.bump_tag.outputs.tag }}
+          git push origin ${{ steps.bump_tag.outputs.tag }}
+        shell: bash
