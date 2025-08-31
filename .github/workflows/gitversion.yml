@@ -19,6 +19,9 @@ jobs:
 
       - name: Show last commit
         run: git log -1
+
+
+        
       - name: Debug working directory
         run: |
           pwd
@@ -27,6 +30,11 @@ jobs:
         run: git rev-parse --abbrev-ref HEAD
       - name: Show GitVersion config
         run: cat .gitversion.yml
+      - name: Show GitVersion effective config
+        run: |
+          dotnet tool install --global GitVersion.Tool --version 6.0.0
+          export PATH="$PATH:/home/runner/.dotnet/tools"
+          gitversion /showconfig
 
 
       - name: Run GitVersion
