@@ -65,6 +65,13 @@ jobs:
             TAG="v${MAJOR}.${MINOR}.${NEW_PATCH}"
           fi
 
+          if [[ -z "$HEAD" ]]; then
+            NEW_PATCH=$((PATCH+1))
+            TAG="v${MAJOR}.${MINOR}.${NEW_PATCH}"
+          else
+            # your existing logic for merges
+          fi
+          
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
       - name: Tag & Push
