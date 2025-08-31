@@ -25,6 +25,8 @@ jobs:
           ls -la
       - name: Show branch name 
         run: git rev-parse --abbrev-ref HEAD
+      - name: Show GitVersion config
+        run: cat .gitversion.yml
 
 
       - name: Run GitVersion
