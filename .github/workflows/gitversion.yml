@@ -23,6 +23,9 @@ jobs:
         run: |
           pwd
           ls -la
+      - name: Show branch name 
+        run: git rev-parse --abbrev-ref HEAD
+
 
       - name: Run GitVersion
         id: gitversion
