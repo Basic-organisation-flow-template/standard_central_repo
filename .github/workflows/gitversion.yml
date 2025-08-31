@@ -21,7 +21,7 @@ jobs:
         run: git log -1
 
 
-        
+
       - name: Debug working directory
         run: |
           pwd
@@ -34,7 +34,8 @@ jobs:
         run: |
           dotnet tool install --global GitVersion.Tool --version 6.0.0
           export PATH="$PATH:/home/runner/.dotnet/tools"
-          gitversion /showconfig
+          dotnet-gitversion /showconfig
+
 
 
       - name: Run GitVersion
