@@ -12,7 +12,7 @@ jobs:
           fetch-depth: 0 # Crucial for GitVersion to see full history
 
       - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v2 # Automatically uses latest version
+        uses: gittools/actions/gitversion/setup@v4 # Automatically uses latest version
         with:
           versionSpec: '6.x' # Or use `latest` to ensure you always use the newest version
       
