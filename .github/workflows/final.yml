@@ -22,7 +22,7 @@ jobs:
         id: gitversion
         run: |
           # Install GitVersion as a global tool
-          dotnet tool install --global GitVersion.Tool --version 6.x
+          dotnet tool install --global GitVersion.Tool --version 6.4.0
 
           # Add the global tool path to the PATH environment variable
           echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
