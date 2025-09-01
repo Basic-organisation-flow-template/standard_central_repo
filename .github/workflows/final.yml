@@ -17,36 +17,17 @@ jobs:
         shell: bash
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-
-      - name: Install and Execute GitVersion
-        id: gitversion
-        run: |
-          # Install GitVersion as a global tool
-          dotnet tool install --global GitVersion.Tool --version 6.4.0
-
-          # Add the global tool path to the PATH environment variable
-          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-
-          # Execute GitVersion and filter the output
-          # 'tail -n 1' ensures we only get the JSON output from the last line
-          VERSION_OUTPUT=$(dotnet-gitversion --roll-forward Major /home/runner/work/child_repo_1/child_repo_1 /output json /l console | tail -n 1)
-
-          # Parse outputs and set them for subsequent steps
-          echo "$VERSION_OUTPUT" | jq -r '.FullSemVer' | xargs -I {} echo "fullSemVer={}" >> $GITHUB_OUTPUT
-          echo "$VERSION_OUTPUT" | jq -r '.MajorMinorPatch' | xargs -I {} echo "majorMinorPatch={}" >> $GITHUB_OUTPUT
-          echo "$VERSION_OUTPUT" | jq -r '.PreReleaseTagWithDash' | xargs -I {} echo "preReleaseTagWithDash={}" >> $GITHUB_OUTPUT
-
-      # - name: Install GitVersion
-      #   uses: gittools/actions/gitversion/setup@v4 # Automatically uses latest version
-      #   with:
-      #     versionSpec: '6.4.0' # Or use `latest` to ensure you always use the newest version
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v4 # Automatically uses latest version
+        with:
+          versionSpec: '6.4.0' # Or use `latest` to ensure you always use the newest version
       
-      # - name: Execute GitVersion
-      #   id: gitversion
-      #   uses: gittools/actions/gitversion/execute@v4
-      #   with:
-      #     useConfigFile: true
-      #     versionSpec: '6.4.0'
+      - name: Execute GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v4
+        with:
+          useConfigFile: true
+          versionSpec: '6.4.0'
       
       - name: Display calculated version
         run: |
