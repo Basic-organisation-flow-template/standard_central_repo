@@ -11,6 +11,11 @@ jobs:
         with:
           fetch-depth: 0 # Crucial for GitVersion to see full history
 
+      # This new step prevents Git security errors that can interfere with GitVersion
+      - name: Set Git safe directory
+        shell: bash
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v4 # Automatically uses latest version
         with:
