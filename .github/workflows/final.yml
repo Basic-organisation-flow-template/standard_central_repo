@@ -22,21 +22,19 @@ jobs:
         id: gitversion
         run: |
           # Install GitVersion as a global tool
-          dotnet tool install --global GitVersion.Tool --version 6.4.0
+          dotnet tool install --global GitVersion.Tool --version 6.x
 
           # Add the global tool path to the PATH environment variable
-          # The location is typically $HOME/.dotnet/tools on Linux runners
           echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
-          # Execute the GitVersion tool with your configuration
-          VERSION_OUTPUT=$(dotnet-gitversion --roll-forward Major /home/runner/work/child_repo_1/child_repo_1 /output json /l console)
+          # Execute GitVersion and filter the output
+          # 'tail -n 1' ensures we only get the JSON output from the last line
+          VERSION_OUTPUT=$(dotnet-gitversion --roll-forward Major /home/runner/work/child_repo_1/child_repo_1 /output json /l console | tail -n 1)
 
           # Parse outputs and set them for subsequent steps
-          # jq is a tool for processing JSON data, which is available on GitHub runners
           echo "$VERSION_OUTPUT" | jq -r '.FullSemVer' | xargs -I {} echo "fullSemVer={}" >> $GITHUB_OUTPUT
           echo "$VERSION_OUTPUT" | jq -r '.MajorMinorPatch' | xargs -I {} echo "majorMinorPatch={}" >> $GITHUB_OUTPUT
           echo "$VERSION_OUTPUT" | jq -r '.PreReleaseTagWithDash' | xargs -I {} echo "preReleaseTagWithDash={}" >> $GITHUB_OUTPUT
-
 
       # - name: Install GitVersion
       #   uses: gittools/actions/gitversion/setup@v4 # Automatically uses latest version
