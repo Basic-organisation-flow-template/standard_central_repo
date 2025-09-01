@@ -1,0 +1,33 @@
+name: Build and Version
+on:
+  workflow_call:
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Crucial for GitVersion to see full history
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v2 # Automatically uses latest version
+        with:
+          versionSpec: '6.x' # Or use `latest` to ensure you always use the newest version
+      
+      - name: Execute GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v2
+        with:
+          useConfigFile: true
+      
+      - name: Display calculated version
+        run: |
+          echo "Full SemVer: ${{ steps.gitversion.outputs.fullSemVer }}"
+          echo "Major.Minor.Patch: ${{ steps.gitversion.outputs.majorMinorPatch }}"
+          echo "Pre-release tag: ${{ steps.gitversion.outputs.preReleaseTagWithDash }}"
+
+      # Example of how to use the version in a build step
+      - name: Build with version
+        run: dotnet build --configuration Release /p:Version=${{ steps.gitversion.outputs.fullSemVer }}
