@@ -17,6 +17,9 @@ jobs:
         shell: bash
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
+        
+      - name: Install GitVersion tool
+        run: dotnet tool install --global GitVersion.Tool --version 6.x
       - name: Execute GitVersion
         id: gitversion
         uses: gittools/actions/gitversion/execute@v4
@@ -24,7 +27,7 @@ jobs:
           useConfigFile: true
           # Specify the version here instead of in a separate setup task
           versionSpec: '6.x'
-          
+
       # - name: Install GitVersion
       #   uses: gittools/actions/gitversion/setup@v4 # Automatically uses latest version
       #   with:
