@@ -1,0 +1,47 @@
+name: Production Node.js Build and Test
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+
+jobs:
+  build-and-test:
+    name: Build, test, and upload
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: print tag
+        run: echo "Tag is ${{ inputs.tag }}"
+
+      # - name: Use Node.js v18
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '18'
+      #     cache: 'npm'
+
+      # - name: Install dependencies
+      #   run: npm ci
+
+      # - name: Build project
+      #   run: npm run build --if-present
+
+      # - name: Run unit tests
+      #   run: npm test
+
+      # - name: Create npm package
+      #   run: npm pack --json > npm-pack-output.json
+
+      # - name: Upload package to S3
+      #   run: |
+      #     # Use jq to get the package filename and the TAG_NAME env var for the destination
+      #     PACKAGE_NAME=$(jq -r '..filename' npm-pack-output.json)
+      #     aws s3 cp $PACKAGE_NAME s3://your-s3-bucket-name/artifacts/v${TAG_NAME}.tgz
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
