@@ -38,10 +38,12 @@ jobs:
       - name: Create npm package
         run: npm pack --json > npm-pack-output.json
 
-      # - name: Upload package to S3
-      #   run: |
-      #     # Use jq to get the package filename and the TAG_NAME env var for the destination
-      #     PACKAGE_NAME=$(jq -r '..filename' npm-pack-output.json)
+      - name: Upload package to S3
+        run: |
+          # Use jq to get the package filename and the TAG_NAME env var for the destination
+          PACKAGE_NAME=$(jq -r '..filename' npm-pack-output.json)
+          echo "Package name is $PACKAGE_NAME"
+          ls
       #     aws s3 cp $PACKAGE_NAME s3://your-s3-bucket-name/artifacts/v${TAG_NAME}.tgz
       #   env:
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
