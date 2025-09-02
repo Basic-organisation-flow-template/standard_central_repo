@@ -41,6 +41,7 @@ jobs:
       - name: Upload package to S3
         run: |
           # Use jq to get the package filename and the TAG_NAME env var for the destination
+          cat npm-pack-output.json
           PACKAGE_NAME=$(jq -r '..filename' npm-pack-output.json)
           echo "Package name is $PACKAGE_NAME"
           ls
