@@ -32,11 +32,14 @@ jobs:
       - name: Build project
         run: npm run build --if-present
 
-      # - name: Run unit tests
-      #   run: npm test
+      - name: Run unit tests
+        run: npm test
 
       - name: Create npm package
         run: npm pack --json > npm-pack-output.json
+
+# sonar qube #####################
+#### OIDC auth then use##########
 
       - name: Upload package to S3
         run: |
