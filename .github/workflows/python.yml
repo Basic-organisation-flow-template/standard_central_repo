@@ -32,6 +32,7 @@ jobs:
         PYTHONPATH: '.' # Add the project root to the Python path
       run: |
         pytest tests/ --cov=my_app_project/ --cov-report=xml --junitxml=junit.xml
+        ls
 
 
     # - name: SonarCloud Scan
