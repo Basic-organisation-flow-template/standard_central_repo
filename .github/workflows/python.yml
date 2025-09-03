@@ -28,8 +28,11 @@ jobs:
         pip install -r requirements.txt
     
     - name: Run unit tests with pytest
+      env:
+        PYTHONPATH: '.' # Add the project root to the Python path
       run: |
         pytest tests/ --cov=my_app_project/ --cov-report=xml --junitxml=junit.xml
+
 
     # - name: SonarCloud Scan
     #   uses: SonarSource/sonarcloud-github-action@v2.1.2
